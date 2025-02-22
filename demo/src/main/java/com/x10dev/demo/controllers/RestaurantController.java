@@ -27,12 +27,23 @@ public class RestaurantController {
     public List<Restaurant> generate() {
         String msg = "recommend me resturants in louisville KY";
 
-        // PromptTemplate promptTemplate = new PromptTemplate(msg);
-        // Prompt prompt = promptTemplate.create(Map.of("message", msg));
-
         return this.chatClient.prompt().user(msg).call().entity(new ParameterizedTypeReference<List<Restaurant>>() {
         });
-
     }
+
+    @GetMapping("/test")
+    public List<Restaurant> geerate(@RequestParam (value = "userInput", defaultValue = "romantic") String msg){
+
+        String message = "recommend me resturants in louisville KY base on this mood {msg}";
+
+        PromptTemplate promptTemplate = new PromptTemplate(message);
+
+        Prompt prompt = promptTemplate.create(Map.of("msg", msg));
+
+        System.out.println(prompt.toString());
+
+        return this.chatClient.prompt().user(prompt.getContents()).call().entity(new ParameterizedTypeReference<List<Restaurant>>() {});
+    }
+
 
 }

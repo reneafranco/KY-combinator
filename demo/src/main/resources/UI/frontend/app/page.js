@@ -12,7 +12,7 @@ export default function Home() {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/api/search?q=${searchQuery}`);
+      const response = await fetch(`http://localhost:8080/restaurants?q=${searchQuery}`);
       if (!response.ok) throw new Error(`Server Error: ${response.status}`);
 
       const data = await response.json();

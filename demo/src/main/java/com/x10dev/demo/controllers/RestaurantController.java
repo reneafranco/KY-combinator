@@ -31,7 +31,7 @@ public class RestaurantController {
         });
     }
 
-    @GetMapping("/test")
+    @GetMapping("/restaurants/generate")
     public List<Restaurant> geerate(@RequestParam (value = "userInput", defaultValue = "romantic") String msg){
 
         String message = "recommend me resturants in louisville KY base on this mood {msg}";

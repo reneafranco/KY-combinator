@@ -22,7 +22,7 @@ public class RestaurantController {
         this.chatClient = chatClient.build();
     }
 
-    @GetMapping("/dad-jokes")
+    @GetMapping("/restaurants")
     public List<Restaurant> generate() {
         String msg = "recommend me resturants in louisville KY";
 

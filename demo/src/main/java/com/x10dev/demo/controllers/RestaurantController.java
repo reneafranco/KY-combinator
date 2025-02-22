@@ -32,9 +32,9 @@ public class RestaurantController {
     }
 
     @GetMapping("/restaurants/generate")
-    public List<Restaurant> geerate(@RequestParam (value = "userInput", defaultValue = "romantic") String msg){
+    public List<Restaurant> generate(@RequestParam(value = "userInput", defaultValue = "romantic") String msg) {
 
-        String message = "recommend me resturants in louisville KY base on this mood {msg}";
+        String message = "recommend me restaurants in louisville KY base on this mood {msg}";
 
         PromptTemplate promptTemplate = new PromptTemplate(message);
 
@@ -42,8 +42,9 @@ public class RestaurantController {
 
         System.out.println(prompt.toString());
 
-        return this.chatClient.prompt().user(prompt.getContents()).call().entity(new ParameterizedTypeReference<List<Restaurant>>() {});
+        return this.chatClient.prompt().user(prompt.getContents()).call()
+                .entity(new ParameterizedTypeReference<List<Restaurant>>() {
+                });
     }
-
 
 }

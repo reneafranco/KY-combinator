@@ -3,8 +3,10 @@ import { useState } from "react";
 
 export default function Home() {
   const [query, setQuery] = useState(""); // Stores user input
+  const [mood, setMood] = useState(""); // Stores mood-based search query
   const [results, setResults] = useState([]); // Stores search results
   const [loading, setLoading] = useState(false); // Shows loading state
+  
 
   // Function to fetch search results from the backend
   const handleSearch = async (searchQuery) => {
@@ -19,6 +21,25 @@ export default function Home() {
       setResults(data);
     } catch (error) {
       console.error("Error fetching search results:", error);
+      alert("Failed to fetch data. Ensure the backend is running.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Function to fetch mood-based restaurant recommendations
+  const handleMoodSearch = async (moodQuery) => {
+    if (!moodQuery) return;
+    setLoading(true);
+
+    try {
+      const response = await fetch(`http://localhost:8080/restaurants/generate?userInput=${moodQuery}`);
+      if (!response.ok) throw new Error(`Server Error: ${response.status}`);
+
+      const data = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error("Error fetching mood-based recommendations:", error);
       alert("Failed to fetch data. Ensure the backend is running.");
     } finally {
       setLoading(false);
@@ -96,6 +117,23 @@ export default function Home() {
           className="bg-blue-500 text-white px-4 py-3 rounded-r-lg hover:bg-blue-600"
         >
           Search
+        </button>
+      </div>
+
+      {/* Mood-Based Search Bar */}
+      <div className="mt-6 flex w-full max-w-md">
+        <input
+          type="text"
+          placeholder="How are you feeling? (e.g., romantic, adventurous)"
+          value={mood}
+          onChange={(e) => setMood(e.target.value)}
+          className="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none"
+        />
+        <button
+          onClick={() => handleMoodSearch(mood)}
+          className="bg-pink-500 text-white px-4 py-3 rounded-r-lg hover:bg-pink-600"
+        >
+          Find by Mood
         </button>
       </div>
 

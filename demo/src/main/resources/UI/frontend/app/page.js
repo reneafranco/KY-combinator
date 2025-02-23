@@ -30,44 +30,8 @@ export default function Home() {
     }
   };
 
-  // Function to fetch ambiance-based restaurant recommendations
-  const handleAmbianceSearch = async (ambianceQuery) => {
-    if (!ambianceQuery) return;
-    setLoading(true);
-
-    try {
-      const response = await fetch(`http://localhost:8080/restaurants/generate?userInput=${ambianceQuery}`);
-      if (!response.ok) throw new Error(`Server Error: ${response.status}`);
-
-      const data = await response.json();
-      setResults(data);
-    } catch (error) {
-      console.error("Error fetching ambiance-based recommendations:", error);
-      alert("Failed to fetch data. Ensure the backend is running.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Function to fetch a random recommendation
-  const handleRandomSearch = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`http://localhost:8080/restaurants/generate/random?`); // Ensure backend supports this
-      if (!response.ok) throw new Error(`Server Error: ${response.status}`);
-
-      const data = await response.json();
-      setResults([data]); // Display a single random result
-    } catch (error) {
-      console.error("Error fetching random recommendation:", error);
-      alert("Could not fetch a random place. Try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Function to start voice recognition
-  const startVoiceRecognition = () => {
+  const startVoiceRecognition = (inputType) => {
     if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
       alert("Your browser does not support speech recognition.");
       return;
@@ -86,8 +50,15 @@ export default function Home() {
     recognition.onresult = (event) => {
       const speechResult = event.results[0][0].transcript;
       console.log("User said:", speechResult);
-      setQuery(speechResult);
-      handleSearch(speechResult); // Automatically search after speech
+
+      if (inputType === "query") {
+        setQuery(speechResult);
+        handleSearch(speechResult);
+      } else if (inputType === "ambiance") {
+        setAmbiance(speechResult);
+        handleSearch(speechResult);
+      }
+
       setIsListening(false);
     };
 
@@ -114,36 +85,47 @@ export default function Home() {
     }
   };
 
+  // Function to show discount pop-up for 10 seconds
+  const handleDiscountClick = () => {
+    setShowDiscount(true);
+    setTimeout(() => {
+      setShowDiscount(false);
+    }, 10000);
+  };
+
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-[#03AED2] p-6 text-center relative">
-      {/* Logo - Friendly Placement */}
+    <div className="h-screen flex flex-col items-center bg-[#68D2E8] p-6 text-center relative">
+      {/* Logo - Centered */}
       <Image 
         src="/1.png" 
         alt="MoodHunters Logo" 
-        width={150} 
-        height={150} 
-        className="absolute top-6 left-6 opacity-90 hover:opacity-100 transition-opacity" 
+        width={200} 
+        height={200} 
+        className="mb-4"
       />
 
-      {/* Fun Motto - Friendly But Stands Out */}
-      <h2 className="text-xl font-semibold text-[#FDDE55] mt-12 animate-pulse">
-        Find Your Vibe, Love Your Spot!
+      
+      <h2 className="text-2xl font-bold text-[#FDDE55]">
+        Discover the Best Small Businesses in Louisville!
       </h2>
-
-      {/* Directions Text */}
-      <p className="text-gray-100 mt-2 max-w-md">
-        Not sure where to go? <br />
-        Speak, type, or let us pick a place for you!
+      <p className="text-white mt-3 max-w-lg text-lg font-medium leading-relaxed">
+        <span className="font-semibold">We give you three ways to find your new favorite spots</span> 
+        <br />
+        ❤️ Click the heart to speak your request  
+        <br />
+        🔎 Type or tell us your mood or business type (e.g., cozy coffee shop, lively bar)  
+        <br />
+        🎲 Feeling adventurous? Click "Surprise Me!"
       </p>
 
-      {/* Search Bar (Text Input) */}
+      {/* Search Bar */}
       <div className="mt-6 flex w-full max-w-md">
         <input
           type="text"
           placeholder="Type your request..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none"
+          className="w-full p-3 border border-gray-300 text-black bg-white rounded-l-lg focus:outline-none"
         />
         <button
           onClick={() => handleSearch(query)}
@@ -153,66 +135,64 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Ambiance-Based Search Bar */}
-      <div className="mt-6 flex w-full max-w-md">
+      {/* Ambiance-Based Search */}
+      <div className="mt-4 flex w-full max-w-md">
         <input
           type="text"
-          placeholder="What vibe are you looking for? (e.g., cozy, lively)"
+          placeholder="What vibe are you looking for?"
           value={ambiance}
           onChange={(e) => setAmbiance(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none"
+          className="w-full p-3 border border-gray-300 text-black bg-white rounded-l-lg focus:outline-none"
         />
         <button
-          onClick={() => handleAmbianceSearch(ambiance)}
+          onClick={() => handleSearch(ambiance)}
           className="bg-pink-500 text-white px-4 py-3 rounded-r-lg hover:bg-pink-600"
         >
           Find by Ambiance
         </button>
       </div>
 
-      {/* Interaction Options: Voice, Text, and Random */}
-      <div className="mt-6 flex flex-col w-full max-w-md space-y-4">
-        {/* Voice Input Button */}
-        <div className="flex space-x-4">
-          <button
-            onClick={startVoiceRecognition}
-            className={`px-4 py-3 w-full rounded-lg text-white ${
-              isListening ? "bg-red-500 hover:bg-red-600" : "bg-purple-500 hover:bg-purple-600"
-            }`}
-          >
-            {isListening ? "🎙️ Listening..." : "🎤 Speak Your Request"}
-          </button>
-          {isListening && (
-            <button
-              onClick={stopVoiceRecognition}
-              className="bg-gray-500 text-white px-4 py-3 w-full rounded-lg hover:bg-gray-600"
-            >
-              🛑 Stop
-            </button>
-          )}
-        </div>
+      {/* Voice Input - Heart Button ❤️ */}
+      <button
+        onClick={() => startVoiceRecognition("query")}
+        className="mt-4 bg-red-500 text-white px-5 py-4 w-20 h-20 rounded-full flex items-center justify-center text-3xl shadow-lg hover:bg-red-600"
+      >
+        ❤️
+      </button>
 
-        {/* Random Recommendation Button */}
+      {/* Stop Button */}
+      {isListening && (
         <button
-          onClick={handleRandomSearch}
-          className="bg-green-500 text-white px-4 py-3 w-full rounded-lg hover:bg-green-600"
+          onClick={stopVoiceRecognition}
+          className="mt-2 bg-gray-500 text-white px-4 py-3 w-full max-w-md rounded-lg hover:bg-gray-600"
         >
-          🎲 Surprise Me!
+          🛑 Stop Listening
         </button>
-      </div>
+      )}
+
+      {/* Random Recommendation */}
+      <button onClick={() => handleSearch("random")} className="mt-4 bg-green-500 text-white px-4 py-3 w-full max-w-md rounded-lg hover:bg-green-600">
+        🎲 Surprise Me!
+      </button>
+
+      {/* Discount Button (Always Visible) */}
+      <button onClick={handleDiscountClick} className="fixed bottom-5 right-5 bg-orange-500 text-white p-3 rounded-full shadow-lg hover:bg-orange-600">
+        🎁
+      </button>
 
       {/* Discount Pop-Up */}
       {showDiscount && (
-        <div className="absolute top-10 right-10 bg-white p-4 rounded-lg shadow-lg">
-          🎁 <strong>Exclusive Offer:</strong> 10% off your favorite small business!
+        <div className="absolute bottom-20 right-5 bg-white p-4 rounded-lg shadow-lg text-black w-64">
+          <h3 className="font-bold">🎁 Thank You!</h3>
+          <p className="text-sm">
+            Thank you for choosing MoodHunters! 
+            Enjoy 10% off at your favorite small business in Louisville. Tell your friends about us to keep the community growing!
+          </p>
+          <button onClick={() => setShowDiscount(false)} className="text-red-500 mt-2">
+            ❌ Close
+          </button>
         </div>
       )}
-      <button onClick={() => setShowDiscount(true)} className="mt-6 text-white">
-        🎁 Claim Your Discount!
-      </button>
-
-      {/* Display Results */}
-      {loading && <p className="text-gray-200 mt-4">Loading...</p>}
     </div>
   );
 }

@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
+
 @SpringBootApplication
 public class KyCombinatorApplication {
 
@@ -25,82 +27,41 @@ public class KyCombinatorApplication {
 	@Bean
 	public CommandLineRunner run() {
 		return args -> {
+			restaurantRepository.deleteAll();
+			restaurantRepository.flush();
 			if (restaurantRepository.count() == 0) {
-
-				Restaurant restaurant1 = new Restaurant();
-				restaurant1.setName("Pizzeria Bella");
-				restaurant1.setAddress("123 Pizza St, Italy");
-				restaurant1.setRating(4.5);
-				restaurant1.setMoodTags("romantic cozy");
-				restaurantRepository.save(restaurant1);
-
-				Restaurant restaurant2 = new Restaurant();
-				restaurant2.setName("Sushi Express");
-				restaurant2.setAddress("456 Sushi Ave, Japan");
-				restaurant2.setRating(4.8);
-				restaurant2.setMoodTags("modern quiet");
-				restaurantRepository.save(restaurant2);
-
-				Restaurant restaurant3 = new Restaurant();
-				restaurant3.setName("Taco Haven");
-				restaurant3.setAddress("789 Taco Rd, Mexico");
-				restaurant3.setRating(4.2);
-				restaurant3.setMoodTags("lively casual");
-				restaurantRepository.save(restaurant3);
-
-				Restaurant restaurant4 = new Restaurant();
-				restaurant4.setName("Steakhouse Supreme");
-				restaurant4.setAddress("321 Meat Blvd, USA");
-				restaurant4.setRating(4.7);
-				restaurant4.setMoodTags("luxurious elegant");
-				restaurantRepository.save(restaurant4);
-
-				Restaurant restaurant5 = new Restaurant();
-				restaurant5.setName("Cafe Aromas");
-				restaurant5.setAddress("654 Coffee St, France");
-				restaurant5.setRating(4.3);
-				restaurant5.setMoodTags("chill cozy");
-				restaurantRepository.save(restaurant5);
-
-				Restaurant restaurant6 = new Restaurant();
-				restaurant6.setName("Fusion Bistro");
-				restaurant6.setAddress("987 Fusion Ave, Singapore");
-				restaurant6.setRating(4.6);
-				restaurant6.setMoodTags("trendy vibrant");
-				restaurantRepository.save(restaurant6);
-
-				Restaurant restaurant7 = new Restaurant();
-				restaurant7.setName("Vegan Delights");
-				restaurant7.setAddress("234 Green Way, USA");
-				restaurant7.setRating(4.4);
-				restaurant7.setMoodTags("healthy peaceful");
-				restaurantRepository.save(restaurant7);
-
-				Restaurant restaurant8 = new Restaurant();
-				restaurant8.setName("The Gourmet Grill");
-				restaurant8.setAddress("123 Grill Ln, Australia");
-				restaurant8.setRating(4.9);
-				restaurant8.setMoodTags("elegant romantic");
-				restaurantRepository.save(restaurant8);
-
-				Restaurant restaurant9 = new Restaurant();
-				restaurant9.setName("Bistro Bella");
-				restaurant9.setAddress("456 Bistro St, Italy");
-				restaurant9.setRating(4.6);
-				restaurant9.setMoodTags("charming intimate");
-				restaurantRepository.save(restaurant9);
-
-				Restaurant restaurant10 = new Restaurant();
-				restaurant10.setName("Seafood Palace");
-				restaurant10.setAddress("567 Ocean Rd, USA");
-				restaurant10.setRating(4.8);
-				restaurant10.setMoodTags("fresh vibrant");
-				restaurantRepository.save(restaurant10);
-
-				System.out.println("Restaurants created successfully!");
-			} else {
-				System.out.println("Database already contains restaurants!");
-			}
-		};
+					List<Restaurant> restaurants = List.of(
+							new Restaurant("J. Graham's Cafe", "335 W Broadway, Louisville, KY 40202", 4.5, "relaxing"),
+							new Restaurant("Hell Or High Water", "112 W Washington St, Louisville, KY 40202", 4.5, "quiet"),
+							new Restaurant("Jeff Ruby's Steakhouse, Louisville", "325 W Main St, Louisville, KY 40202", 4.5, "upscale"),
+							new Restaurant("Repeal Oak Fired Steakhouse", "101 W Main St, Louisville, KY 40202", 4.5, "upscale"),
+							new Restaurant("Brendon's Catch 23", "505 S 4th St, Louisville, KY 40202", 4.5, "upscale"),
+							new Restaurant("The Cafe", "712 Brent St, Louisville, KY 40204", 4.5, "cozy"),
+							new Restaurant("Sidebar At Whiskey Row", "129 S 2nd St, Louisville, KY 40202", 4.5, "lively"),
+							new Restaurant("Mussel & Burger Bar", "9200 Taylorsville Rd, Louisville, KY 40299", 4.5, "casual"),
+							new Restaurant("Brazeiros Churrascaria - Brazilian Steakhouse", "450 S 4th St, Louisville, KY 40202", 4.5, "upscale"),
+							new Restaurant("Wild Eggs", "121 S Floyd St, Louisville, KY 40202", 4.5, "family-friendly"),
+							new Restaurant("Varanese", "2106 Frankfort Ave, Louisville, KY 40206", 4.5, "romantic"),
+							new Restaurant("Proof on Main", "702 W Main St, Louisville, KY 40202", 4.5, "artistic"),
+							new Restaurant("Pat's Steakhouse", "2437 Brownsboro Rd, Louisville, KY 40206", 4.5, "traditional"),
+							new Restaurant("Merle's Whiskey Kitchen", "122 W Main St, Louisville, KY 40202", 4.5, "rustic"),
+							new Restaurant("The Eagle", "1314 Bardstown Rd, Louisville, KY 40204", 4.5, "lively"),
+							new Restaurant("Meesh Meesh", "1001 Logan St, Louisville, KY 40204", 4.5, "intimate"),
+							new Restaurant("Lou Lou on Market", "812 E Market St, Louisville, KY 40206", 4.5, "vibrant"),
+							new Restaurant("8Up Elevated Drinkery & Kitchen", "350 W Chestnut St, Louisville, KY 40202", 4.5, "trendy"),
+							new Restaurant("Porch Kitchen & Bar", "280 W Jefferson St, Louisville, KY 40202", 4.5, "welcoming"),
+							new Restaurant("Jack Fry's", "1007 Bardstown Rd, Louisville, KY 40204", 4.5, "historic"),
+							new Restaurant("Ramsi's Cafe On The World", "1293 Bardstown Rd, Louisville, KY 40204", 4.5, "eclectic"),
+							new Restaurant("Volare Ristorante", "2300 Frankfort Ave, Louisville, KY 40206", 4.5, "elegant"),
+							new Restaurant("Walker's Exchange", "140 N 4th St, Louisville, KY 40202", 4.5, "classic"),
+							new Restaurant("English Grill", "335 W Broadway, Louisville, KY 40202", 4.5, "sophisticated"),
+							new Restaurant("Buck's Restaurant & Bar", "425 W Ormsby Ave, Louisville, KY 40203", 4.5, "romantic")
+					);
+					restaurantRepository.saveAll(restaurants);
+					System.out.println("Restaurants created successfully!");
+				} else {
+					System.out.println("Database already contains restaurants!");
+				}
+			};
 	}
 }

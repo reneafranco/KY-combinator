@@ -28,5 +28,12 @@ public class Restaurant {
 
     @Column(nullable = false)
     private String moodTags;
+
+    public Restaurant(String s, String s1, double v, String relaxing) {
+        this.name = s;
+        this.address = s1;
+        this.rating = v;
+        this.moodTags = relaxing;
+    }
 }
 

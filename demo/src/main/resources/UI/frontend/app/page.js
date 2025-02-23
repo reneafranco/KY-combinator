@@ -93,6 +93,24 @@ export default function Home() {
     }, 10000);
   };
 
+  // Function to fetch a random suggestion from the backend
+  const handleRandomSearch = async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch(`http://localhost:8080/restaurants/generate/random`);
+      if (!response.ok) throw new Error(`Server Error: ${response.status}`);
+
+      const data = await response.json();
+      setResults([data]);
+    } catch (error) {
+      console.error("Error fetching random suggestion:", error);
+      alert("Failed to fetch data. Ensure the backend is running.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col items-center bg-[#68D2E8] p-6 text-center relative">
       {/* Logo - Centered */}
@@ -171,7 +189,7 @@ export default function Home() {
       )}
 
       {/* Random Recommendation */}
-      <button onClick={() => handleSearch("random")} className="mt-4 bg-green-500 text-white px-4 py-3 w-full max-w-md rounded-lg hover:bg-green-600">
+      <button onClick={handleRandomSearch} className="mt-4 bg-green-500 text-white px-4 py-3 w-full max-w-md rounded-lg hover:bg-green-600">
         🎲 Surprise Me!
       </button>
 

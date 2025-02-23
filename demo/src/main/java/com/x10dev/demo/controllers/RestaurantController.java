@@ -20,6 +20,7 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
+
     public RestaurantController(ChatClient.Builder chatClient, RestaurantService restaurantService) {
         this.chatClient = chatClient.build();
         this.restaurantService = restaurantService;
@@ -33,10 +34,29 @@ public class RestaurantController {
         });
     }
 
-    @GetMapping("/restaurants/generate")
+    @GetMapping("/generate")
     public List<Restaurant> generate(@RequestParam(value = "userInput", defaultValue = "romantic") String msg) {
 
-        String message = "recommend me restaurants in louisville KY base on this mood {msg}";
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+
+        StringBuilder restaurantData = new StringBuilder();
+        for (Restaurant restaurant : restaurants) {
+            restaurantData.append("Restaurant: ")
+                    .append(restaurant.getName())
+                    .append(", Address: ")
+                    .append(restaurant.getAddress())
+                    .append(", Rating: ")
+                    .append(restaurant.getRating())
+                    .append(", MoodTags: ")
+                    .append(restaurant.getMoodTags())
+                    .append("\n");
+        }
+
+
+        String message = "Here are some restaurants I found based on the mood '" + msg + "':\n" + restaurantData.toString() +
+                "\nPlease choose the best options based on the mood and recommend them.";
+
+
 
         PromptTemplate promptTemplate = new PromptTemplate(message);
 

@@ -1,46 +1,32 @@
 package com.x10dev.demo.entity;
 
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "restaurants")
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class Restaurant {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
     private double rating;
 
-    // Constructor
-    public Restaurant(String name, String address, double rating) {
-        this.name = name;
-        this.address = address;
-        this.rating = rating;
-    }
-
-    // Getters y Setters
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurant [name=" + name + ", address=" + address + ", rating=" + rating + "]";
-    }
+    @Column(nullable = false)
+    private String moodTags;
 }
 

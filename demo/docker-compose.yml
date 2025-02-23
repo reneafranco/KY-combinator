@@ -1,14 +1,14 @@
 services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/restaurant_db
-      SPRING_DATASOURCE_USERNAME: app_user
-      SPRING_DATASOURCE_PASSWORD: password
-    depends_on:
-      - db
+#  app:
+#    build: .
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/restaurant_db
+#      SPRING_DATASOURCE_USERNAME: app_user
+#      SPRING_DATASOURCE_PASSWORD: password
+#    depends_on:
+#      - db
 
   db:
     image: postgres:13

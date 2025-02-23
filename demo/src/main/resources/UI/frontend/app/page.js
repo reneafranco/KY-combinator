@@ -1,13 +1,15 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Home() {
   const [query, setQuery] = useState(""); // Stores user input
-  const [mood, setMood] = useState(""); // Stores mood-based search query
+  const [ambiance, setAmbiance] = useState(""); // Stores ambiance-based search query
   const [results, setResults] = useState([]); // Stores search results
   const [loading, setLoading] = useState(false); // Shows loading state
   const [isListening, setIsListening] = useState(false); // Tracks voice recognition state
   const [recognitionInstance, setRecognitionInstance] = useState(null); // Stores recognition instance
+  const [showDiscount, setShowDiscount] = useState(false); // Controls discount pop-up
 
   // Function to fetch search results from the backend
   const handleSearch = async (searchQuery) => {
@@ -28,19 +30,19 @@ export default function Home() {
     }
   };
 
-  // Function to fetch mood-based restaurant recommendations
-  const handleMoodSearch = async (moodQuery) => {
-    if (!moodQuery) return;
+  // Function to fetch ambiance-based restaurant recommendations
+  const handleAmbianceSearch = async (ambianceQuery) => {
+    if (!ambianceQuery) return;
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/restaurants/generate?userInput=${moodQuery}`);
+      const response = await fetch(`http://localhost:8080/restaurants/generate?userInput=${ambianceQuery}`);
       if (!response.ok) throw new Error(`Server Error: ${response.status}`);
 
       const data = await response.json();
       setResults(data);
     } catch (error) {
-      console.error("Error fetching mood-based recommendations:", error);
+      console.error("Error fetching ambiance-based recommendations:", error);
       alert("Failed to fetch data. Ensure the backend is running.");
     } finally {
       setLoading(false);
@@ -113,10 +115,23 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-gray-100 p-6 text-center">
-      {/* Title */}
-      <h1 className="text-4xl font-bold text-blue-600">MoodHunters</h1>
-      <p className="text-gray-700 mt-2 max-w-md">
+    <div className="h-screen flex flex-col items-center justify-center bg-[#03AED2] p-6 text-center relative">
+      {/* Logo - Friendly Placement */}
+      <Image 
+        src="/1.png" 
+        alt="MoodHunters Logo" 
+        width={150} 
+        height={150} 
+        className="absolute top-6 left-6 opacity-90 hover:opacity-100 transition-opacity" 
+      />
+
+      {/* Fun Motto - Friendly But Stands Out */}
+      <h2 className="text-xl font-semibold text-[#FDDE55] mt-12 animate-pulse">
+        Find Your Vibe, Love Your Spot!
+      </h2>
+
+      {/* Directions Text */}
+      <p className="text-gray-100 mt-2 max-w-md">
         Not sure where to go? <br />
         Speak, type, or let us pick a place for you!
       </p>
@@ -138,20 +153,20 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Mood-Based Search Bar */}
+      {/* Ambiance-Based Search Bar */}
       <div className="mt-6 flex w-full max-w-md">
         <input
           type="text"
-          placeholder="How are you feeling? (e.g., romantic, adventurous)"
-          value={mood}
-          onChange={(e) => setMood(e.target.value)}
+          placeholder="What vibe are you looking for? (e.g., cozy, lively)"
+          value={ambiance}
+          onChange={(e) => setAmbiance(e.target.value)}
           className="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none"
         />
         <button
-          onClick={() => handleMoodSearch(mood)}
+          onClick={() => handleAmbianceSearch(ambiance)}
           className="bg-pink-500 text-white px-4 py-3 rounded-r-lg hover:bg-pink-600"
         >
-          Find by Mood
+          Find by Ambiance
         </button>
       </div>
 
@@ -186,22 +201,18 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Loading Indicator */}
-      {loading && <p className="text-gray-500 mt-4">Loading...</p>}
+      {/* Discount Pop-Up */}
+      {showDiscount && (
+        <div className="absolute top-10 right-10 bg-white p-4 rounded-lg shadow-lg">
+          🎁 <strong>Exclusive Offer:</strong> 10% off your favorite small business!
+        </div>
+      )}
+      <button onClick={() => setShowDiscount(true)} className="mt-6 text-white">
+        🎁 Claim Your Discount!
+      </button>
 
       {/* Display Results */}
-      <div className="mt-6 w-full max-w-md">
-        {results.length > 0 && (
-          <ul className="bg-white p-4 rounded-lg shadow-md">
-            {results.map((business, index) => (
-              <li key={index} className="border-b py-2 last:border-b-0">
-                <strong>{business.name}</strong>
-                <p className="text-sm text-gray-600">{business.category}</p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {loading && <p className="text-gray-200 mt-4">Loading...</p>}
     </div>
   );
 }

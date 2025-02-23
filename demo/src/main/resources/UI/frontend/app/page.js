@@ -104,16 +104,16 @@ export default function Home() {
         className="mb-4"
       />
 
-      
+      {/* Instructions - Louisville Focused */}
       <h2 className="text-2xl font-bold text-[#FDDE55]">
         Discover the Best Small Businesses in Louisville!
       </h2>
       <p className="text-white mt-3 max-w-lg text-lg font-medium leading-relaxed">
-        <span className="font-semibold">We give you three ways to find your new favorite spots</span> 
+        <span className="font-semibold">How it works:</span> 
         <br />
-        ❤️ Click the heart to speak your request  
+        ❤️ Click the heart to speak your request 
         <br />
-        🔎 Type or tell us your mood or business type (e.g., cozy coffee shop, lively bar)  
+        🔎 Type or speak a mood or business type (e.g., cozy coffee shop, lively bar)  
         <br />
         🎲 Feeling adventurous? Click "Surprise Me!"
       </p>
@@ -185,8 +185,8 @@ export default function Home() {
         <div className="absolute bottom-20 right-5 bg-white p-4 rounded-lg shadow-lg text-black w-64">
           <h3 className="font-bold">🎁 Thank You!</h3>
           <p className="text-sm">
-            Thank you for choosing MoodHunters! 
-            Enjoy 10% off at your favorite small business in Louisville. Tell your friends about us to keep the community growing!
+            Thank you for choosing MoodHunters!
+            Enjoy 10% off at your favorite small business in Louisville.  
           </p>
           <button onClick={() => setShowDiscount(false)} className="text-red-500 mt-2">
             ❌ Close

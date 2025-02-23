@@ -193,6 +193,20 @@ export default function Home() {
           </button>
         </div>
       )}
+
+      {/* Search Results */}
+      <div className="mt-6 w-full max-w-md">
+        {results.length > 0 && (
+          <ul className="bg-white p-4 rounded-lg shadow-md">
+            {results.map((business, index) => (
+              <li key={index} className="border-b py-2 last:border-b-0">
+                <strong>{business.name}</strong>
+                <p className="text-sm text-gray-600">{business.category}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ package com.x10dev.demo.controllers;
 import com.x10dev.demo.entity.Restaurant;
 import com.x10dev.demo.service.RestaurantService;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.ResponseEntity;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.core.ParameterizedTypeReference;
@@ -116,5 +117,12 @@ public class RestaurantController {
     public void deleteRestaurant(@PathVariable Long id) {
         restaurantService.deleteRestaurant(id);
     }
+
+    @GetMapping("/getbById/{id}")
+    public Restaurant getRestaurant(@PathVariable Long id) {
+
+        return restaurantService.findRestaurantById(id);
+    }
+
 
 }

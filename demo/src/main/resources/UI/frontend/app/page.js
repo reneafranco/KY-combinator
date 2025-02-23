@@ -6,7 +6,8 @@ export default function Home() {
   const [mood, setMood] = useState(""); // Stores mood-based search query
   const [results, setResults] = useState([]); // Stores search results
   const [loading, setLoading] = useState(false); // Shows loading state
-  
+  const [isListening, setIsListening] = useState(false); // Tracks voice recognition state
+  const [recognitionInstance, setRecognitionInstance] = useState(null); // Stores recognition instance
 
   // Function to fetch search results from the backend
   const handleSearch = async (searchQuery) => {
@@ -76,6 +77,7 @@ export default function Home() {
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
+      setIsListening(true);
       console.log("Voice recognition started...");
     };
 
@@ -84,14 +86,30 @@ export default function Home() {
       console.log("User said:", speechResult);
       setQuery(speechResult);
       handleSearch(speechResult); // Automatically search after speech
+      setIsListening(false);
     };
 
     recognition.onerror = (event) => {
       console.error("Speech recognition error:", event.error);
       alert("Could not process speech. Please try again.");
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
     };
 
     recognition.start();
+    setRecognitionInstance(recognition);
+  };
+
+  // Function to stop voice recognition
+  const stopVoiceRecognition = () => {
+    if (recognitionInstance) {
+      recognitionInstance.stop();
+      setIsListening(false);
+      console.log("Voice recognition stopped by user.");
+    }
   };
 
   return (
@@ -140,12 +158,24 @@ export default function Home() {
       {/* Interaction Options: Voice, Text, and Random */}
       <div className="mt-6 flex flex-col w-full max-w-md space-y-4">
         {/* Voice Input Button */}
-        <button
-          onClick={startVoiceRecognition}
-          className="bg-purple-500 text-white px-4 py-3 w-full rounded-lg hover:bg-purple-600"
-        >
-          🎤 Speak Your Request
-        </button>
+        <div className="flex space-x-4">
+          <button
+            onClick={startVoiceRecognition}
+            className={`px-4 py-3 w-full rounded-lg text-white ${
+              isListening ? "bg-red-500 hover:bg-red-600" : "bg-purple-500 hover:bg-purple-600"
+            }`}
+          >
+            {isListening ? "🎙️ Listening..." : "🎤 Speak Your Request"}
+          </button>
+          {isListening && (
+            <button
+              onClick={stopVoiceRecognition}
+              className="bg-gray-500 text-white px-4 py-3 w-full rounded-lg hover:bg-gray-600"
+            >
+              🛑 Stop
+            </button>
+          )}
+        </div>
 
         {/* Random Recommendation Button */}
         <button

@@ -52,13 +52,14 @@ public class RestaurantController {
                     .append("\n");
         }
 
+        String systemMessage = "You are a restaurant recommendation system. Your task is to recommend restaurants based on a given mood.";
 
         String message = "Here are some restaurants I found based on the mood '" + msg + "':\n" + restaurantData.toString() +
                 "\nPlease choose the best options based on the mood and recommend them.";
 
 
 
-        PromptTemplate promptTemplate = new PromptTemplate(message);
+        PromptTemplate promptTemplate = new PromptTemplate(systemMessage + "\n" + message);
 
         Prompt prompt = promptTemplate.create(Map.of("msg", msg));
 

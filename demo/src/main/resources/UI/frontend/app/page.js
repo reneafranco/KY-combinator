@@ -51,7 +51,7 @@ export default function Home() {
   const handleRandomSearch = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/random`); // Ensure backend supports this
+      const response = await fetch(`http://localhost:8080/restaurants/generate/random?`); // Ensure backend supports this
       if (!response.ok) throw new Error(`Server Error: ${response.status}`);
 
       const data = await response.json();

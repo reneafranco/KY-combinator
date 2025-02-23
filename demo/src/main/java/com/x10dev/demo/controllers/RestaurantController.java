@@ -70,6 +70,41 @@ public class RestaurantController {
                 });
     }
 
+    @GetMapping("/generate/random")
+    public Restaurant generateRandom() {
+
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+
+        StringBuilder restaurantData = new StringBuilder();
+        for (Restaurant restaurant : restaurants) {
+            restaurantData.append("Restaurant: ")
+                    .append(restaurant.getName())
+                    .append(", Address: ")
+                    .append(restaurant.getAddress())
+                    .append(", Rating: ")
+                    .append(restaurant.getRating())
+                    .append(", MoodTags: ")
+                    .append(restaurant.getMoodTags())
+                    .append("\n");
+        }
+
+        String systemMessage = "You are a restaurant recommendation system. Your task is to recommend restaurants based on a given mood.";
+
+        String message = "Here are some restaurants . Give only one restaurnat random" + restaurantData.toString() +
+                "\nPlease choose only one.";
+
+
+
+        PromptTemplate promptTemplate = new PromptTemplate(systemMessage + "\n" + message);
+
+        Prompt prompt = promptTemplate.create();
+
+        System.out.println(prompt.toString());
+
+        return this.chatClient.prompt().user(prompt.getContents()).call()
+                .entity(Restaurant.class);
+    }
+
 
     @GetMapping
     public List<Restaurant> getAllRestaurants() {

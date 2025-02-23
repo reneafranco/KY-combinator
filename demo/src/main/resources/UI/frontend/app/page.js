@@ -1,12 +1,12 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 export default function Home() {
   const [query, setQuery] = useState(""); // Stores user input
   const [isListening, setIsListening] = useState(false); // Tracks speech recognition state
   const [errorMessage, setErrorMessage] = useState(""); // Stores error messages
   const [searchResults, setSearchResults] = useState([]); // Stores API results
-  const recognitionRef = useRef(null); // Stores recognition instance
+  const [recognition, setRecognition] = useState(null); // Stores recognition instance
 
   // Function to handle text input changes
   const handleInputChange = (event) => {
@@ -56,14 +56,14 @@ export default function Home() {
       console.log("Voice recognition stopped.");
     };
 
-    recognitionRef.current = recognitionInstance; // Store instance in useRef
     recognitionInstance.start();
+    setRecognition(recognitionInstance);
   };
 
   // Function to stop voice recognition
   const stopVoiceRecognition = () => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
+    if (recognition) {
+      recognition.stop();
       setIsListening(false);
       console.log("Voice recognition stopped by user.");
     }
@@ -102,43 +102,53 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-4">MoodHunters</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gradient-to-r from-blue-50 to-blue-100">
+      <h1 className="text-4xl font-bold mb-4 text-gray-900">MoodHunters</h1>
 
-      <div className="flex border border-gray-300 rounded-lg p-2 w-full max-w-md">
+      {/* Search Container */}
+      <div className="relative flex border border-gray-300 rounded-lg p-2 w-full max-w-md bg-white shadow-md">
+        {/* Search Input */}
         <input
           type="text"
           value={query}
           onChange={handleInputChange}
           placeholder="Search for a place..."
-          className="flex-grow p-2 focus:outline-none"
+          className="flex-grow p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300"
         />
+        
+        {/* Voice Button (Pulsing When Active) */}
         <button
-  onClick={startVoiceRecognition}
-  className={`ml-2 p-2 rounded transition-all ${
-    isListening
-      ? "bg-red-500 animate-pulse"
-      : "bg-blue-500 hover:bg-blue-600"
-  } text-white`}
->
-  🎤
-</button>
+          onClick={startVoiceRecognition}
+          className={`ml-2 p-2 rounded transition-all ${
+            isListening
+              ? "bg-red-500 animate-pulse"
+              : "bg-blue-500 hover:bg-blue-600"
+          } text-white`}
+        >
+          🎤
+        </button>
+
+        {/* Stop Voice Recognition Button */}
         <button
           onClick={stopVoiceRecognition}
-          className={`ml-2 p-2 ${isListening ? "bg-gray-500" : "bg-gray-300"} text-white rounded`}
+          className="ml-2 p-2 bg-red-500 text-white rounded"
           disabled={!isListening}
         >
           🛑
         </button>
+
+        {/* Search Button */}
         <button
           onClick={handleSearch}
-          className="ml-2 p-2 bg-green-500 text-white rounded"
+          className="ml-2 p-2 bg-green-500 text-white rounded hover:bg-green-600"
         >
           🔍
         </button>
+
+        {/* Random Business Suggestion */}
         <button
           onClick={handleRandomSearch}
-          className="ml-2 p-2 bg-yellow-500 text-white rounded"
+          className="ml-2 p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
         >
           🎲
         </button>
@@ -152,7 +162,7 @@ export default function Home() {
         {searchResults.length > 0 ? (
           <ul className="space-y-2">
             {searchResults.map((result, index) => (
-              <li key={index} className="p-3 bg-gray-100 rounded-lg">
+              <li key={index} className="p-3 bg-gray-100 rounded-lg shadow-sm hover:shadow-md transition-all">
                 {result.name} - {result.category}
               </li>
             ))}
@@ -164,3 +174,4 @@ export default function Home() {
     </div>
   );
 }
+
